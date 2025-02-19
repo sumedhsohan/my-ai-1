@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume & Interview Prep</title>
+</head>
+<body>
+    <h2>Resume Generator</h2>
+    <input type="text" id="name" placeholder="Enter your name"><br>
+    <input type="text" id="skills" placeholder="Enter your skills (comma-separated)"><br>
+    <textarea id="experience" placeholder="Enter your experience"></textarea><br>
+    <button onclick="generateResume()">Generate Resume</button>
+    <p id="resumeOutput"></p>
+
+    <h2>Mock Interview Questions</h2>
+    <input type="text" id="jobRole" placeholder="Enter job role"><br>
+    <button onclick="getQuestions()">Get Interview Questions</button>
+    <p id="questionOutput"></p>
+
+    <script>
+        async function generateResume() {
+            const name = document.getElementById("name").value;
+            const skills = document.getElementById("skills").value;
+            const experience = document.getElementById("experience").value;
+
+            const response = await fetch("http://127.0.0.1:5000/generate_resume", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, skills, experience })
+            });
+
+            const data = await response.json();
+            document.getElementById("resumeOutput").innerText = data.resume;
+        }
+
+        async function getQuestions() {
+            const jobRole = document.getElementById("jobRole").value;
+
+            const response = await fetch("http://127.0.0.1:5000/interview_questions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ job_role: jobRole })
+            });
+
+            const data = await response.json();
+            document.getElementById("questionOutput").innerText = data.questions;
+        }
+    </script>
+</body>
+</html>
